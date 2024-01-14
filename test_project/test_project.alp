@@ -1,0 +1,29 @@
+{
+  "idea": "Sample idea",
+  "language": "Python",
+  "include_art": "true",
+  "messages": [
+    {
+      "timestamp": "2022-01-01 10:00:00",
+      "chat": "abc",
+      "log": "def"
+    },
+    {
+      "timestamp": "2022-01-01 10:00:00",
+      "chat": "ghi",
+      "log": "jkl"
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": 1,
+      "description": "Task 1",
+      "done": "false"
+    },
+    {
+      "task_id": 2,
+      "description": "Task 2",
+      "done": "false"
+    }
+  ]
+}
