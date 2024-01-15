@@ -53,10 +53,24 @@ def create_menu():
     # Configure the root window to use the menu bar
     root.config(menu=menu_bar)
 
-def set_programming_languages_dropdown(option):
-    programming_languages_dropdown.set(option)
-
 def create_main_window():
+    def start_stop_button_clicked():
+        if start_stop_button["text"] == "Start":
+            if data.project_folder_path == "":
+                show_error("Save location not set", "The project needs to be saved first")
+            else:
+                if data.project_data["project_idea"] == "":
+                    show_error("Idea not set", "Set the idea by sending the first message")
+                else:
+                    start_stop_button["text"] = "Stop"
+                    controller.start_project()
+        else:
+            start_stop_button["text"] = "Start"
+            controller.start_project()
+    
+    def message_button_clicked():
+        controller.send_message(message_textbox.get("1.0", "end").rstrip("\n"))
+
     settings_frame = ttk.Frame(root)
 
     programming_languages_label = tk.Label(settings_frame, text="Programming Language")
@@ -66,7 +80,7 @@ def create_main_window():
     programming_languages_dropdown.set(data.programming_languages_dropdown_options[0])
     programming_languages_dropdown.pack(side="left")
 
-    start_stop_button = tk.Button(settings_frame, text="Start", command=controller.start_stop)
+    start_stop_button = tk.Button(settings_frame, text="Start", command=start_stop_button_clicked)
     start_stop_button.pack(side="right")
 
     settings_frame.pack(side="top", fill="x")
@@ -93,15 +107,20 @@ def create_main_window():
 
     tab_control.pack(fill="both", expand=True)
 
+    global message_textbox
     message_textbox = tk.Text(root, height=3)
     message_textbox.pack(side="left", fill="both")
-    message_button = tk.Button(root, text="Send", command=controller.send_message, height=3, width=12)
+    message_button = tk.Button(root, text="Send", command=message_button_clicked, height=3, width=12)
     message_button.pack(side="right")
 
-def update_chat_tab(text, reset):
-    chat_textbox.configure(state="normal")  # Enable editing
-    if reset:
-        chat_textbox.delete("1.0", "end")
+def empty_message_textbox():
+    message_textbox.delete("1.0", "end")
+
+def empty_chat_tab():
+    chat_textbox.delete("1.0", "end")
+
+def update_chat_tab(text):
+    chat_textbox.configure(state="normal")  # Enable editing        
     chat_textbox.insert("end", text + "\n")  # Insert text at the end
     chat_textbox.configure(state="disabled")  # Disable editing
 

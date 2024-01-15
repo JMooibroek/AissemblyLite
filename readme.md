@@ -3,4 +3,4 @@
 
 
 # TODO
- * Controller debuggen
+ * Controller line 20. JSON laad nog niet goed
