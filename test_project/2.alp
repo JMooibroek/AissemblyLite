@@ -1,6 +1,7 @@
 {
-    "idea": "this is my idea",
+    "idea": "",
     "language": "Python",
+    "group": "",
     "messages": [],
     "tasks": []
 }

@@ -1,0 +1,16 @@
+{
+    "language": "",
+    "group": "Alpha+Image",
+    "messages": [
+        {
+            "mention": "Task Creator",
+            "text": "hello world"
+        },
+        {
+            "mention": "Task Creator",
+            "text": "new msg"
+        }
+    ],
+    "logs": [],
+    "tasks": []
+}

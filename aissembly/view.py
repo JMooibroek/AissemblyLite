@@ -1,5 +1,6 @@
-import data
-import controller
+import aissembly.data as controller
+import aissembly.controller as controller
+import aissembly.data as data
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -56,14 +57,11 @@ def create_menu():
 def create_main_window():
     def start_stop_button_clicked():
         if start_stop_button["text"] == "Start":
-            if data.project_folder_path == "":
-                show_error("Save location not set", "The project needs to be saved first")
+            if data.project_data["messages"] == []:
+                show_error("First message not sent", "Send the first message to start")
             else:
-                if data.project_data["project_idea"] == "":
-                    show_error("Idea not set", "Set the idea by sending the first message")
-                else:
-                    start_stop_button["text"] = "Stop"
-                    controller.start_project()
+                start_stop_button["text"] = "Stop"
+                controller.start_project()
         else:
             start_stop_button["text"] = "Start"
             controller.start_project()
@@ -71,19 +69,46 @@ def create_main_window():
     def message_button_clicked():
         controller.send_message(message_textbox.get("1.0", "end").rstrip("\n"))
 
-    settings_frame = ttk.Frame(root)
+    def on_groups_dropdown_changed(event):
+        data.project_data["group"] = groups_dropdown.get()
+        controller.load_mentions()
 
-    programming_languages_label = tk.Label(settings_frame, text="Programming Language")
+    def on_programming_languages_dropdown_change(event):
+        data.project_data["language"] = programming_languages_dropdown.get()
+
+    top_frame = ttk.Frame(root)
+
+    # Drop down menu for the programming languages
+    programming_languages_label = tk.Label(top_frame, text="Programming Language:")
     programming_languages_label.pack(side="left")
     global programming_languages_dropdown
-    programming_languages_dropdown = ttk.Combobox(settings_frame, values=data.programming_languages_dropdown_options, state="readonly")
+    programming_languages_dropdown = ttk.Combobox(top_frame, width=7, values=data.programming_languages_dropdown_options, state="readonly")
     programming_languages_dropdown.set(data.programming_languages_dropdown_options[0])
+    programming_languages_dropdown.bind("<<Modified>>", on_programming_languages_dropdown_change)
     programming_languages_dropdown.pack(side="left")
 
-    start_stop_button = tk.Button(settings_frame, text="Start", command=start_stop_button_clicked)
+    # Drop down menu for the groups
+    groups_label = tk.Label(top_frame, text="Group:")
+    groups_label.pack(side="left")
+    global groups_dropdown
+    groups_dropdown = ttk.Combobox(top_frame, values=data.groups_dropdown_options, state="readonly")
+    groups_dropdown.set(data.groups_dropdown_options[0])
+    groups_dropdown.bind("<<ComboboxSelected>>", on_groups_dropdown_changed)
+    groups_dropdown.pack(side="left")
+
+    # Drop down menu for the groups
+    templates_label = tk.Label(top_frame, text="Template:")
+    templates_label.pack(side="left")
+    global templates_dropdown
+    templates_dropdown = ttk.Combobox(top_frame, values=data.templates_dropdown_options, state="readonly")
+    templates_dropdown.set(data.templates_dropdown_options[0])
+    templates_dropdown.pack(side="left")
+
+    # Button to start or stop the project
+    start_stop_button = tk.Button(top_frame, text="Start", command=start_stop_button_clicked)
     start_stop_button.pack(side="right")
 
-    settings_frame.pack(side="top", fill="x")
+    top_frame.pack(side="top", fill="x")
 
     tab_control = ttk.Notebook(root)
 
@@ -107,10 +132,19 @@ def create_main_window():
 
     tab_control.pack(fill="both", expand=True)
 
+    mention_label = tk.Label(root, text="To:")
+    mention_label.pack(side="left")
+    global mention_dropdown
+    mention_dropdown = ttk.Combobox(root, width=20, values=data.mention_dropdown_options, state="readonly")
+    controller.load_mentions()
+    mention_dropdown.set(data.mention_dropdown_options[0])
+    mention_dropdown.pack(side="left")
+
     global message_textbox
-    message_textbox = tk.Text(root, height=3)
-    message_textbox.pack(side="left", fill="both")
-    message_button = tk.Button(root, text="Send", command=message_button_clicked, height=3, width=12)
+    message_textbox = tk.Text(root, wrap='word', height=1)
+    message_textbox.pack(side="left", fill="both", expand=True)
+
+    message_button = tk.Button(root, text="Send", command=message_button_clicked)
     message_button.pack(side="right")
 
 def empty_message_textbox():
@@ -123,16 +157,19 @@ def update_chat_tab(text):
     chat_textbox.configure(state="normal")  # Enable editing        
     chat_textbox.insert("end", text + "\n")  # Insert text at the end
     chat_textbox.configure(state="disabled")  # Disable editing
+    chat_textbox.yview_moveto(1.0)
 
 def update_log_tab(text):
     log_textbox.configure(state="normal")  # Enable editing
     log_textbox.insert("end", text + "\n")  # Insert text at the end
     log_textbox.configure(state="disabled")  # Disable editing
+    log_textbox.yview_moveto(1.0)
 
 def update_tasks_tab(text):
     tasks_textbox.configure(state="normal")  # Enable editing
     tasks_textbox.insert("end", text + "\n")  # Insert text at the end
     tasks_textbox.configure(state="disabled")  # Disable editing
+    tasks_textbox.yview_moveto(1.0)
 
 def open_settings():
     settings_window = tk.Toplevel(root)

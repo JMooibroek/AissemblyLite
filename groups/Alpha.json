@@ -1,0 +1,14 @@
+{
+    "Task Creator": {
+        "function": "",
+        "instruction": "Create tasks for a {language} project"
+    },
+    "Programmer": {
+        "function": "",
+        "instruction": ""
+    },
+    "Tester": {
+        "function": "",
+        "instruction": ""
+    }
+}

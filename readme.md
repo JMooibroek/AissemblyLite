@@ -3,4 +3,6 @@
 
 
 # TODO
- * Controller line 20. JSON laad nog niet goed
+ * Ai response beter in messages[] zetten.
+ * Alpha.json aanpassen met betere prompts.
+    * JSON feedback en verwerken
